@@ -45,6 +45,7 @@ Website : https://leapai.ai/
     'support': 'sales@leapai.ai',
     'website': 'https://leapai.ai/',
     'license': 'LGPL-3',
+    'images': ['static/description/banner.png'],
     'application': True,
     'depends': ['mail', 'hr', 'stock', 'maintenance', 'uom'],
     'data': [
