@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="res.groups.privilege" id="res_groups_privilege_agriculture">
+        <field name="name">Agriculture Suite</field>
+        <field name="sequence">56</field>
+        <field name="category_id" ref="base.module_category_customizations"/>
+    </record>
+
+    <record id="group_agri_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="sequence">10</field>
+        <field name="privilege_id" ref="res_groups_privilege_agriculture"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">Can view, plan and log farm, field and crop operations.</field>
+    </record>
+
+    <record id="group_agri_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="sequence">20</field>
+        <field name="privilege_id" ref="res_groups_privilege_agriculture"/>
+        <field name="implied_ids" eval="[(4, ref('leapai_agriculture.group_agri_user'))]"/>
+        <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        <field name="comment">Full access including deletion and configuration of farms, crops and seasons.</field>
+    </record>
+
+    <record id="agri_farm_rule_multi_company" model="ir.rule">
+        <field name="name">Farm: multi-company</field>
+        <field name="model_id" ref="model_agri_farm"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="agri_crop_rule_multi_company" model="ir.rule">
+        <field name="name">Crop: multi-company</field>
+        <field name="model_id" ref="model_agri_crop"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="agri_season_rule_multi_company" model="ir.rule">
+        <field name="name">Season: multi-company</field>
+        <field name="model_id" ref="model_agri_season"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_agri_crop_plan_list" model="ir.ui.view">
+        <field name="name">agri.crop.plan.list</field>
+        <field name="model">agri.crop.plan</field>
+        <field name="arch" type="xml">
+            <list string="Crop Plans" decoration-muted="state == 'cancelled'">
+                <field name="name"/>
+                <field name="farm_id"/>
+                <field name="field_id"/>
+                <field name="crop_id"/>
+                <field name="season_id"/>
+                <field name="planned_area"/>
+                <field name="budget_amount"/>
+                <field name="actual_cost"/>
+                <field name="cost_variance"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'harvested'"
+                       decoration-info="state in ('confirmed', 'in_progress')"
+                       decoration-danger="state == 'cancelled'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_agri_crop_plan_form" model="ir.ui.view">
+        <field name="name">agri.crop.plan.form</field>
+        <field name="model">agri.crop.plan</field>
+        <field name="arch" type="xml">
+            <form string="Crop Plan">
+                <header>
+                    <button name="action_confirm" type="object" string="Confirm" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_start" type="object" string="Start"
+                            invisible="state != 'confirmed'"/>
+                    <button name="action_harvested" type="object" string="Mark Harvested"
+                            invisible="state != 'in_progress'"/>
+                    <button name="action_cancel" type="object" string="Cancel"
+                            invisible="state in ('cancelled', 'harvested')"/>
+                    <button name="action_set_draft" type="object" string="Reset to Draft"
+                            invisible="state not in ('confirmed', 'cancelled')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,in_progress,harvested"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_activities" type="object" class="oe_stat_button" icon="fa-tasks">
+                            <field name="activity_count" widget="statinfo" string="Activities"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="season_id"/>
+                            <field name="farm_id" invisible="1"/>
+                            <field name="field_id"/>
+                            <field name="crop_id"/>
+                        </group>
+                        <group>
+                            <field name="planned_area"/>
+                            <field name="sowing_date"/>
+                            <field name="expected_harvest_date"/>
+                        </group>
+                    </group>
+                    <group string="Job Cost Sheet">
+                        <group>
+                            <field name="budget_amount"/>
+                            <field name="budget_per_hectare" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="actual_cost" readonly="1"/>
+                            <field name="cost_per_hectare" readonly="1"/>
+                            <field name="cost_variance" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Notes">
+                        <field name="notes" nolabel="1"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_agri_crop_plan_search" model="ir.ui.view">
+        <field name="name">agri.crop.plan.search</field>
+        <field name="model">agri.crop.plan</field>
+        <field name="arch" type="xml">
+            <search string="Search Crop Plans">
+                <field name="field_id"/>
+                <field name="crop_id"/>
+                <field name="season_id"/>
+                <field name="farm_id"/>
+                <filter string="Draft" name="filter_draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="In Progress" name="filter_in_progress" domain="[('state', '=', 'in_progress')]"/>
+                <filter string="Harvested" name="filter_harvested" domain="[('state', '=', 'harvested')]"/>
+                <group>
+                    <filter string="Season" name="group_season" context="{'group_by': 'season_id'}"/>
+                    <filter string="Farm" name="group_farm" context="{'group_by': 'farm_id'}"/>
+                    <filter string="Crop" name="group_crop" context="{'group_by': 'crop_id'}"/>
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_agri_crop_plan_pivot" model="ir.ui.view">
+        <field name="name">agri.crop.plan.pivot</field>
+        <field name="model">agri.crop.plan</field>
+        <field name="arch" type="xml">
+            <pivot string="Crop Plan Cost Analysis">
+                <field name="crop_id" type="row"/>
+                <field name="season_id" type="col"/>
+                <field name="budget_amount" type="measure"/>
+                <field name="actual_cost" type="measure"/>
+                <field name="cost_variance" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_agri_crop_plan_graph" model="ir.ui.view">
+        <field name="name">agri.crop.plan.graph</field>
+        <field name="model">agri.crop.plan</field>
+        <field name="arch" type="xml">
+            <graph string="Crop Plan Cost Analysis" type="bar">
+                <field name="crop_id"/>
+                <field name="budget_amount" type="measure"/>
+                <field name="actual_cost" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_agri_crop_plan" model="ir.actions.act_window">
+        <field name="name">Crop Plans</field>
+        <field name="res_model">agri.crop.plan</field>
+        <field name="view_mode">list,form,pivot,graph</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Plan your first crop</p>
+            <p>Assign a crop to a field for a given season.</p>
+        </field>
+    </record>
+
+</odoo>

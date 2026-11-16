@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="menu_agri_root" name="Agriculture" sequence="90" web_icon="leapai_agriculture,static/description/icon.png"/>
+
+    <menuitem id="menu_agri_farms" name="Farms" parent="menu_agri_root" sequence="10"/>
+    <menuitem id="menu_agri_farm" name="Farms" parent="menu_agri_farms" action="action_agri_farm" sequence="10"/>
+    <menuitem id="menu_agri_field" name="Fields" parent="menu_agri_farms" action="action_agri_field" sequence="20"/>
+    <menuitem id="menu_agri_soil_sample" name="Soil Samples" parent="menu_agri_farms" action="action_agri_soil_sample" sequence="30"/>
+
+    <menuitem id="menu_agri_crops" name="Crops" parent="menu_agri_root" sequence="20"/>
+    <menuitem id="menu_agri_crop" name="Crops" parent="menu_agri_crops" action="action_agri_crop" sequence="10"/>
+    <menuitem id="menu_agri_season" name="Seasons" parent="menu_agri_crops" action="action_agri_season" sequence="20"/>
+    <menuitem id="menu_agri_crop_plan" name="Crop Plans" parent="menu_agri_crops" action="action_agri_crop_plan" sequence="30"/>
+
+    <menuitem id="menu_agri_operations" name="Operations" parent="menu_agri_root" sequence="30"/>
+    <menuitem id="menu_agri_field_activity" name="Field Activities" parent="menu_agri_operations" action="action_agri_field_activity" sequence="10"/>
+
+</odoo>

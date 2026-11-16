@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LeapAI Agriculture Suite</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #2d2d2d;
+      background: #fff;
+      line-height: 1.6;
+    }
+
+    /* ── Hero ────────────────────────────────────────────────────────────── */
+    .hero {
+      background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 45%, #558b2f 100%);
+      color: #fff;
+      padding: 56px 40px 48px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M50 50c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10s-10-4.477-10-10 4.477-10 10-10zM10 10c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10S0 25.523 0 20s4.477-10 10-10z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .hero-logo {
+      width: 96px;
+      height: 96px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      font-size: 48px;
+      backdrop-filter: blur(4px);
+      border: 2px solid rgba(255,255,255,0.3);
+    }
+    .hero h1 { font-size: 36px; font-weight: 800; letter-spacing: -0.5px; text-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+    .hero h1 span { color: #c5e1a5; }
+    .hero .subtitle { margin-top: 10px; font-size: 18px; opacity: 0.9; font-weight: 400; }
+    .badges { margin-top: 22px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .badge {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 20px;
+      padding: 5px 16px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    /* ── Stats bar ───────────────────────────────────────────────────────── */
+    .stats {
+      background: #0d2b12;
+      color: #fff;
+      display: flex;
+      justify-content: space-around;
+      padding: 22px 20px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .stat { text-align: center; }
+    .stat-num { font-size: 28px; font-weight: 800; color: #9ccc65; }
+    .stat-lbl { font-size: 12px; opacity: 0.65; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    /* ── Section ─────────────────────────────────────────────────────────── */
+    .section { padding: 48px 40px; }
+    .section.alt { background: #f1f8e9; }
+    .section-title {
+      font-size: 26px;
+      font-weight: 800;
+      color: #1b5e20;
+      border-left: 5px solid #558b2f;
+      padding-left: 14px;
+      margin-bottom: 32px;
+    }
+    .section-subtitle { font-size: 14px; color: #666; margin-top: -20px; margin-bottom: 28px; }
+
+    /* ── Feature grid ────────────────────────────────────────────────────── */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+    }
+    .feature-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 2px 12px rgba(27,94,32,0.08);
+      border: 1px solid #e3efe0;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .feature-card:hover { transform: translateY(-3px); box-shadow: 0 6px 24px rgba(27,94,32,0.15); }
+    .feature-icon { font-size: 36px; margin-bottom: 12px; display: block; }
+    .feature-card h3 { font-size: 16px; font-weight: 700; color: #1a1a2e; margin-bottom: 8px; }
+    .feature-card p { font-size: 13.5px; color: #666; line-height: 1.55; }
+
+    /* ── Pipeline ────────────────────────────────────────────────────────── */
+    .pipeline {
+      display: flex;
+      gap: 0;
+      align-items: stretch;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+    .pipe-step {
+      flex: 1;
+      min-width: 120px;
+      background: #fff;
+      border: 2px solid #e3efe0;
+      border-radius: 10px;
+      padding: 18px 12px;
+      text-align: center;
+      position: relative;
+    }
+    .pipe-step + .pipe-step { margin-left: 10px; }
+    .pipe-step::after {
+      content: '→';
+      position: absolute;
+      right: -18px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 20px;
+      color: #558b2f;
+      z-index: 1;
+    }
+    .pipe-step:last-child::after { display: none; }
+    .pipe-icon { font-size: 28px; display: block; margin-bottom: 8px; }
+    .pipe-label { font-size: 12.5px; font-weight: 700; color: #1b5e20; }
+
+    /* ── Screenshots / Video placeholders ───────────────────────────────── */
+    .media-section { padding: 48px 40px; background: #0d1f10; color: #fff; }
+    .media-section .section-title { color: #9ccc65; border-left-color: #558b2f; }
+    .media-note { color: rgba(255,255,255,0.55); font-size: 13px; margin-bottom: 24px; }
+    .media-frame {
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.55);
+      margin-bottom: 28px;
+    }
+    .media-bar {
+      background: #16331a;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .media-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+    .media-title { color: rgba(255,255,255,0.65); font-size: 12px; margin-left: 8px; font-weight: 600; }
+    .media-placeholder {
+      background: repeating-linear-gradient(45deg, #15291a, #15291a 12px, #10211400 12px, #10211400 24px);
+      background-color: #16311b;
+      min-height: 260px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 8px;
+      color: rgba(255,255,255,0.45);
+      font-size: 13px;
+      text-align: center;
+      padding: 20px;
+    }
+    .media-placeholder .big { font-size: 32px; }
+
+    /* ── Contact ─────────────────────────────────────────────────────────── */
+    .contact-section { padding: 48px 40px; background: #fff; }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+    .contact-card {
+      background: #f1f8e9;
+      border: 1px solid #dcedc8;
+      border-radius: 12px;
+      padding: 22px 20px;
+      text-align: center;
+    }
+    .contact-card .c-icon { font-size: 28px; margin-bottom: 10px; display: block; }
+    .contact-card .c-title { font-size: 13px; font-weight: 700; color: #1b5e20; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 8px; }
+    .contact-card .c-body { font-size: 13.5px; color: #333; line-height: 1.5; margin-bottom: 12px; }
+    .contact-card a.c-action {
+      display: inline-block;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #fff;
+      background: #2e7d32;
+      padding: 7px 16px;
+      border-radius: 20px;
+      text-decoration: none;
+    }
+    .contact-card a.c-action:hover { background: #1b5e20; }
+
+    .dev-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: #0d2b12;
+      color: #fff;
+      border-radius: 12px;
+      padding: 20px 24px;
+      flex-wrap: wrap;
+    }
+    .dev-avatar {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: #558b2f; color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 18px; flex-shrink: 0;
+    }
+    .dev-info { flex: 1; min-width: 220px; }
+    .dev-info .name { font-size: 16px; font-weight: 700; }
+    .dev-info .role { font-size: 12.5px; color: rgba(255,255,255,0.7); margin-top: 2px; }
+    .dev-card a.c-action {
+      display: inline-block;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #0d2b12;
+      background: #9ccc65;
+      padding: 7px 16px;
+      border-radius: 20px;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    /* ── Footer ──────────────────────────────────────────────────────────── */
+    .footer {
+      background: #0d2b12;
+      color: rgba(255,255,255,0.7);
+      text-align: center;
+      padding: 24px 20px;
+      font-size: 13px;
+    }
+    .footer strong { color: #9ccc65; }
+  </style>
+</head>
+<body>
+
+<!-- ── Hero ──────────────────────────────────────────────────────────────── -->
+<div class="hero">
+  <div class="hero-logo">🌾</div>
+  <h1>LeapAI <span>Agriculture</span> Suite</h1>
+  <div class="subtitle">Farm, Field &amp; Crop Planning Management — Phase 1</div>
+  <div class="badges">
+    <span class="badge">Odoo 19</span>
+    <span class="badge">Phase 1 of 4</span>
+    <span class="badge">OpenStreetMap Fields</span>
+    <span class="badge">Real Stock Consumption</span>
+    <span class="badge">Job Costing</span>
+  </div>
+</div>
+
+<!-- ── Stats ─────────────────────────────────────────────────────────────── -->
+<div class="stats">
+  <div class="stat"><div class="stat-num">9</div><div class="stat-lbl">Core Models</div></div>
+  <div class="stat"><div class="stat-num">7</div><div class="stat-lbl">Activity Types</div></div>
+  <div class="stat"><div class="stat-num">100%</div><div class="stat-lbl">Real Stock Moves</div></div>
+  <div class="stat"><div class="stat-num">1 / 4</div><div class="stat-lbl">Suite Phases Live</div></div>
+</div>
+
+<!-- ── Overview ──────────────────────────────────────────────────────────── -->
+<div class="section">
+  <div class="section-title">About This Module</div>
+  <p style="font-size:15px; color:#444; max-width:860px; margin-bottom:20px;">
+    <strong>LeapAI Agriculture Suite</strong> brings farm, field and crop planning management into Odoo 19.
+    Draw field boundaries on an interactive OpenStreetMap, track soil samples over time, plan crops per
+    season, and log field activities — land preparation, sowing, irrigation, fertilization, spraying,
+    weeding and harvest — that consume real warehouse stock, employee labour hours and machinery hours.
+  </p>
+  <p style="font-size:15px; color:#444; max-width:860px;">
+    Every crop plan carries a live job cost sheet: budget vs. actual cost, cost per hectare, computed
+    directly from completed field activities. This is phase 1 of the suite — monitoring &amp; analytics
+    (scouting, weather), livestock management and the contract-farming portal are planned for later phases.
+  </p>
+</div>
+
+<!-- ── Workflow ──────────────────────────────────────────────────────────── -->
+<div class="section alt">
+  <div class="section-title">Workflow</div>
+  <div class="pipeline">
+    <div class="pipe-step"><span class="pipe-icon">🚜</span><div class="pipe-label">Farm</div></div>
+    <div class="pipe-step"><span class="pipe-icon">🗺️</span><div class="pipe-label">Field + Map</div></div>
+    <div class="pipe-step"><span class="pipe-icon">📅</span><div class="pipe-label">Season</div></div>
+    <div class="pipe-step"><span class="pipe-icon">🌱</span><div class="pipe-label">Crop Plan</div></div>
+    <div class="pipe-step"><span class="pipe-icon">🧾</span><div class="pipe-label">Field Activity</div></div>
+    <div class="pipe-step"><span class="pipe-icon">💰</span><div class="pipe-label">Job Cost Sheet</div></div>
+  </div>
+</div>
+
+<!-- ── Features ──────────────────────────────────────────────────────────── -->
+<div class="section">
+  <div class="section-title">Core Features</div>
+  <div class="feature-grid">
+
+    <div class="feature-card">
+      <span class="feature-icon">🗺️</span>
+      <h3>Farms &amp; Fields</h3>
+      <p>Register farms, draw field boundaries on an interactive OpenStreetMap, automatic area
+         calculation in hectares.</p>
+    </div>
+
+    <div class="feature-card">
+      <span class="feature-icon">🧪</span>
+      <h3>Soil Samples</h3>
+      <p>Track soil type, pH, organic matter, NPK and electrical conductivity per field over time.</p>
+    </div>
+
+    <div class="feature-card">
+      <span class="feature-icon">🌾</span>
+      <h3>Crops</h3>
+      <p>Master data for varieties, days-to-harvest, expected yield and Growing Degree Day base
+         temperature.</p>
+    </div>
+
+    <div class="feature-card">
+      <span class="feature-icon">📅</span>
+      <h3>Seasons &amp; Crop Plans</h3>
+      <p>Plan crops per field per season with overlap prevention and budget forecasting.</p>
+    </div>
+
+    <div class="feature-card">
+      <span class="feature-icon">🧾</span>
+      <h3>Field Activities</h3>
+      <p>Land prep, sowing, irrigation, fertilization, spraying, weeding, harvest — consuming real
+         stock, labour and machinery hours.</p>
+    </div>
+
+    <div class="feature-card">
+      <span class="feature-icon">💰</span>
+      <h3>Job Cost Sheets</h3>
+      <p>Budget vs. actual cost, cost per hectare, computed live from completed field activities.</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── Screenshots (placeholders — send screenshots to fill these in) ─────── -->
+<div class="media-section">
+  <div class="section-title">Screenshots</div>
+  <p class="media-note">Screenshots coming soon — once provided, they'll replace the placeholders below.</p>
+
+  <div class="media-frame">
+    <div class="media-bar">
+      <span class="media-dot" style="background:#ff5f57"></span>
+      <span class="media-dot" style="background:#ffbd2e"></span>
+      <span class="media-dot" style="background:#28ca41"></span>
+      <span class="media-title">Field Form — Boundary Map</span>
+    </div>
+    <!-- <img src="screen_field_map.png" alt="Field Boundary Map" style="width:100%;display:block;border:0;"/> -->
+    <div class="media-placeholder"><span class="big">🖼️</span><span>Screenshot placeholder — screen_field_map.png</span></div>
+  </div>
+
+  <div class="media-frame">
+    <div class="media-bar">
+      <span class="media-dot" style="background:#ff5f57"></span>
+      <span class="media-dot" style="background:#ffbd2e"></span>
+      <span class="media-dot" style="background:#28ca41"></span>
+      <span class="media-title">Crop Plan — Job Cost Sheet</span>
+    </div>
+    <!-- <img src="screen_crop_plan.png" alt="Crop Plan Job Cost Sheet" style="width:100%;display:block;border:0;"/> -->
+    <div class="media-placeholder"><span class="big">🖼️</span><span>Screenshot placeholder — screen_crop_plan.png</span></div>
+  </div>
+
+  <div class="media-frame">
+    <div class="media-bar">
+      <span class="media-dot" style="background:#ff5f57"></span>
+      <span class="media-dot" style="background:#ffbd2e"></span>
+      <span class="media-dot" style="background:#28ca41"></span>
+      <span class="media-title">Field Activity — Materials / Labour / Machinery</span>
+    </div>
+    <!-- <img src="screen_field_activity.png" alt="Field Activity" style="width:100%;display:block;border:0;"/> -->
+    <div class="media-placeholder"><span class="big">🖼️</span><span>Screenshot placeholder — screen_field_activity.png</span></div>
+  </div>
+</div>
+
+<!-- ── Workflow Video ────────────────────────────────────────────────────── -->
+<div class="section alt">
+  <div class="section-title">Agriculture in Odoo — User Journey</div>
+  <p class="section-subtitle">A guided tour: Farms → Farm → Fields → Crops → Plans → Activities.</p>
+  <div class="media-frame" style="box-shadow:0 8px 28px rgba(27,94,32,0.15);">
+    <div class="media-bar" style="background:#1b5e20;">
+      <span class="media-dot" style="background:#ff5f57"></span>
+      <span class="media-dot" style="background:#ffbd2e"></span>
+      <span class="media-dot" style="background:#28ca41"></span>
+      <span class="media-title">Agriculture_User_Journey.mp4</span>
+    </div>
+    <img src="Agriculture_User_Journey_preview.gif" alt="Agriculture in Odoo — User Journey"
+         style="width:100%;display:block;"/>
+  </div>
+</div>
+
+<!-- ── Contact ───────────────────────────────────────────────────────────── -->
+<div class="contact-section">
+  <div class="section-title">Contact LEAP AI</div>
+  <p class="section-subtitle">King Abdulaziz Branch Road, Riyadh, Saudi Arabia</p>
+
+  <div class="contact-grid">
+    <div class="contact-card">
+      <span class="c-icon">📍</span>
+      <div class="c-title">Our Location</div>
+      <div class="c-body">King Abdulaziz Branch Road<br/>Riyadh, Saudi Arabia</div>
+      <a class="c-action" href="https://www.google.com/maps/search/?api=1&amp;query=King+Abdulaziz+Branch+Road%2C+Riyadh%2C+Saudi+Arabia" target="_blank" rel="noopener">View on map</a>
+    </div>
+    <div class="contact-card">
+      <span class="c-icon">✉️</span>
+      <div class="c-title">Send an Email</div>
+      <div class="c-body">sales@leapai.ai</div>
+      <a class="c-action" href="mailto:sales@leapai.ai">Email us now</a>
+    </div>
+    <div class="contact-card">
+      <span class="c-icon">📞</span>
+      <div class="c-title">Call Anytime</div>
+      <div class="c-body">+966 53 553 3627</div>
+      <a class="c-action" href="tel:+966535533627">Call now</a>
+    </div>
+  </div>
+
+  <div class="dev-card">
+    <div class="dev-avatar">AO</div>
+    <div class="dev-info">
+      <div class="name">Abdulkaraim Osman</div>
+      <div class="role">Tech Manager | Backend Engineer | DevOps Engineer<br/>at Bab International Corp For Specialized Services</div>
+    </div>
+    <a class="c-action" href="https://www.linkedin.com/in/abdulkaraim-o-385b7a110/" target="_blank" rel="noopener">Connect on LinkedIn</a>
+  </div>
+</div>
+
+<!-- ── Footer ────────────────────────────────────────────────────────────── -->
+<div class="footer">
+  <strong>LeapAI Agriculture Suite</strong><br/>
+  © 2026 LeapAI — LGPL-3 License · Version 19.0.1.0.0 · Odoo 19
+</div>
+
+</body>
+</html>

@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+
+    <!-- ── Products used as field inputs ─────────────────────────────────────── -->
+    <record id="product_agri_wheat_seed" model="product.product">
+        <field name="name">Wheat Seed</field>
+        <field name="type">consu</field>
+        <field name="is_storable">True</field>
+        <field name="standard_price">2.5</field>
+        <field name="list_price">0.0</field>
+    </record>
+
+    <record id="product_agri_urea" model="product.product">
+        <field name="name">Urea Fertilizer</field>
+        <field name="type">consu</field>
+        <field name="is_storable">True</field>
+        <field name="standard_price">0.9</field>
+        <field name="list_price">0.0</field>
+    </record>
+
+    <record id="stock_inventory_agri_wheat_seed" model="stock.quant">
+        <field name="product_id" ref="product_agri_wheat_seed"/>
+        <field name="inventory_quantity">2000.0</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <record id="stock_inventory_agri_urea" model="stock.quant">
+        <field name="product_id" ref="product_agri_urea"/>
+        <field name="inventory_quantity">1000.0</field>
+        <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+    </record>
+    <function model="stock.quant" name="action_apply_inventory"
+              eval="[[ref('stock_inventory_agri_wheat_seed'), ref('stock_inventory_agri_urea')]]"/>
+
+    <!-- ── Machinery ──────────────────────────────────────────────────────────── -->
+    <record id="equipment_agri_tractor" model="maintenance.equipment">
+        <field name="name">Tractor - JD 5055E</field>
+        <field name="is_agri_machinery">True</field>
+        <field name="agri_hourly_cost">25.0</field>
+    </record>
+    <record id="equipment_agri_pump" model="maintenance.equipment">
+        <field name="name">Irrigation Pump</field>
+        <field name="is_agri_machinery">True</field>
+        <field name="agri_hourly_cost">8.0</field>
+    </record>
+
+    <!-- ── Crops ──────────────────────────────────────────────────────────────── -->
+    <record id="crop_wheat" model="agri.crop">
+        <field name="name">Wheat</field>
+        <field name="variety">Durum</field>
+        <field name="days_to_harvest">120</field>
+        <field name="expected_yield">4.5</field>
+        <field name="gdd_base_temperature">5.0</field>
+    </record>
+    <record id="crop_tomato" model="agri.crop">
+        <field name="name">Tomato</field>
+        <field name="variety">Roma</field>
+        <field name="days_to_harvest">80</field>
+        <field name="expected_yield">35.0</field>
+        <field name="gdd_base_temperature">10.0</field>
+    </record>
+
+    <!-- ── Farm & Fields ──────────────────────────────────────────────────────── -->
+    <record id="farm_green_valley" model="agri.farm">
+        <field name="name">Green Valley Farm</field>
+        <field name="city">Al Kharj</field>
+        <field name="warehouse_id" ref="stock.warehouse0"/>
+        <field name="latitude">24.1500</field>
+        <field name="longitude">47.3000</field>
+    </record>
+
+    <record id="field_north" model="agri.field">
+        <field name="name">North Field</field>
+        <field name="farm_id" ref="farm_green_valley"/>
+        <field name="soil_type">loamy</field>
+        <field name="area">12.5</field>
+        <field name="center_latitude">24.1550</field>
+        <field name="center_longitude">47.3020</field>
+        <field name="boundary_geojson">[[47.3000,24.1560],[47.3040,24.1560],[47.3040,24.1540],[47.3000,24.1540],[47.3000,24.1560]]</field>
+    </record>
+
+    <record id="field_south" model="agri.field">
+        <field name="name">South Field</field>
+        <field name="farm_id" ref="farm_green_valley"/>
+        <field name="soil_type">sandy</field>
+        <field name="area">8.2</field>
+        <field name="center_latitude">24.1450</field>
+        <field name="center_longitude">47.3010</field>
+        <field name="boundary_geojson">[[47.2990,24.1460],[47.3030,24.1460],[47.3030,24.1440],[47.2990,24.1440],[47.2990,24.1460]]</field>
+    </record>
+
+    <record id="soil_sample_north_1" model="agri.soil.sample">
+        <field name="field_id" ref="field_north"/>
+        <field name="date" eval="(DateTime.today() - relativedelta(days=30)).strftime('%Y-%m-%d')"/>
+        <field name="soil_type">loamy</field>
+        <field name="ph">6.8</field>
+        <field name="organic_matter">3.2</field>
+        <field name="nitrogen">45</field>
+        <field name="phosphorus">20</field>
+        <field name="potassium">30</field>
+        <field name="ec">1.1</field>
+    </record>
+
+    <!-- ── Season & Crop Plans ────────────────────────────────────────────────── -->
+    <record id="season_2025_main" model="agri.season">
+        <field name="name">2025 Main Season</field>
+        <field name="date_start" eval="(DateTime.today() - relativedelta(days=60)).strftime('%Y-%m-%d')"/>
+        <field name="date_end" eval="(DateTime.today() + relativedelta(days=90)).strftime('%Y-%m-%d')"/>
+    </record>
+
+    <record id="crop_plan_north_wheat" model="agri.crop.plan">
+        <field name="season_id" ref="season_2025_main"/>
+        <field name="field_id" ref="field_north"/>
+        <field name="crop_id" ref="crop_wheat"/>
+        <field name="state">in_progress</field>
+        <field name="planned_area">12.5</field>
+        <field name="budget_amount">15000.0</field>
+        <field name="sowing_date" eval="(DateTime.today() - relativedelta(days=25)).strftime('%Y-%m-%d')"/>
+        <field name="expected_harvest_date" eval="(DateTime.today() + relativedelta(days=95)).strftime('%Y-%m-%d')"/>
+    </record>
+
+    <record id="crop_plan_south_tomato" model="agri.crop.plan">
+        <field name="season_id" ref="season_2025_main"/>
+        <field name="field_id" ref="field_south"/>
+        <field name="crop_id" ref="crop_tomato"/>
+        <field name="state">confirmed</field>
+        <field name="planned_area">8.2</field>
+        <field name="budget_amount">9500.0</field>
+        <field name="sowing_date" eval="(DateTime.today() - relativedelta(days=10)).strftime('%Y-%m-%d')"/>
+        <field name="expected_harvest_date" eval="(DateTime.today() + relativedelta(days=70)).strftime('%Y-%m-%d')"/>
+    </record>
+
+    <!-- ── Field Activities ───────────────────────────────────────────────────── -->
+    <record id="activity_sowing_north" model="agri.field.activity">
+        <field name="field_id" ref="field_north"/>
+        <field name="crop_plan_id" ref="crop_plan_north_wheat"/>
+        <field name="activity_type">sowing</field>
+        <field name="date" eval="(DateTime.today() - relativedelta(days=25)).strftime('%Y-%m-%d')"/>
+    </record>
+    <record id="activity_sowing_north_material_1" model="agri.field.activity.material">
+        <field name="activity_id" ref="activity_sowing_north"/>
+        <field name="product_id" ref="product_agri_wheat_seed"/>
+        <field name="product_uom_qty">250.0</field>
+    </record>
+    <record id="activity_sowing_north_labor_1" model="agri.field.activity.labor">
+        <field name="activity_id" ref="activity_sowing_north"/>
+        <field name="employee_id" ref="hr.employee_admin"/>
+        <field name="hours">8.0</field>
+        <field name="hourly_cost">15.0</field>
+    </record>
+    <record id="activity_sowing_north_machinery_1" model="agri.field.activity.machinery">
+        <field name="activity_id" ref="activity_sowing_north"/>
+        <field name="equipment_id" ref="equipment_agri_tractor"/>
+        <field name="hours">3.0</field>
+        <field name="hourly_cost">25.0</field>
+    </record>
+
+    <record id="activity_fertilization_north" model="agri.field.activity">
+        <field name="field_id" ref="field_north"/>
+        <field name="crop_plan_id" ref="crop_plan_north_wheat"/>
+        <field name="activity_type">fertilization</field>
+        <field name="date" eval="(DateTime.today() - relativedelta(days=10)).strftime('%Y-%m-%d')"/>
+    </record>
+    <record id="activity_fertilization_north_material_1" model="agri.field.activity.material">
+        <field name="activity_id" ref="activity_fertilization_north"/>
+        <field name="product_id" ref="product_agri_urea"/>
+        <field name="product_uom_qty">150.0</field>
+    </record>
+    <record id="activity_fertilization_north_labor_1" model="agri.field.activity.labor">
+        <field name="activity_id" ref="activity_fertilization_north"/>
+        <field name="employee_id" ref="hr.employee_admin"/>
+        <field name="hours">4.0</field>
+        <field name="hourly_cost">15.0</field>
+    </record>
+
+    <record id="activity_irrigation_south" model="agri.field.activity">
+        <field name="field_id" ref="field_south"/>
+        <field name="crop_plan_id" ref="crop_plan_south_tomato"/>
+        <field name="activity_type">irrigation</field>
+        <field name="date" eval="(DateTime.today() - relativedelta(days=2)).strftime('%Y-%m-%d')"/>
+    </record>
+    <record id="activity_irrigation_south_machinery_1" model="agri.field.activity.machinery">
+        <field name="activity_id" ref="activity_irrigation_south"/>
+        <field name="equipment_id" ref="equipment_agri_pump"/>
+        <field name="hours">6.0</field>
+        <field name="hourly_cost">8.0</field>
+    </record>
+
+    <!-- Confirm the two completed activities: this consumes real stock via stock.move -->
+    <function model="agri.field.activity" name="action_done"
+              eval="[[ref('activity_sowing_north'), ref('activity_fertilization_north')]]"/>
+
+</data>
+</odoo>

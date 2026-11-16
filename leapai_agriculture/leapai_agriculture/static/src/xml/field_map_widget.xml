@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="leapai_agriculture.FieldMapWidget">
+        <div class="o_agri_field_map">
+            <div class="o_agri_field_map_canvas" t-ref="map"/>
+            <div class="o_agri_field_map_toolbar mt-2" t-if="!props.readonly">
+                <button type="button" class="btn btn-sm btn-primary me-2" t-on-click="onFinishBoundary">
+                    Save Boundary
+                </button>
+                <button type="button" class="btn btn-sm btn-secondary" t-on-click="onClearBoundary">
+                    Clear
+                </button>
+                <span class="text-muted ms-2">Click on the map to add boundary points, then Save Boundary.</span>
+            </div>
+        </div>
+    </t>
+
+</templates>

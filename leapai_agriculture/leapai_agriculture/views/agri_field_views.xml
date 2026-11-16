@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_agri_field_list" model="ir.ui.view">
+        <field name="name">agri.field.list</field>
+        <field name="model">agri.field</field>
+        <field name="arch" type="xml">
+            <list string="Fields">
+                <field name="name"/>
+                <field name="farm_id"/>
+                <field name="area" sum="Total Area (ha)"/>
+                <field name="soil_type"/>
+                <field name="current_crop_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_agri_field_form" model="ir.ui.view">
+        <field name="name">agri.field.form</field>
+        <field name="model">agri.field</field>
+        <field name="arch" type="xml">
+            <form string="Field">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_crop_plans" type="object" class="oe_stat_button" icon="fa-leaf">
+                            <field name="crop_plan_count" widget="statinfo" string="Crop Plans"/>
+                        </button>
+                        <button name="action_view_soil_samples" type="object" class="oe_stat_button" icon="fa-flask">
+                            <field name="soil_sample_count" widget="statinfo" string="Soil Samples"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Field Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="farm_id"/>
+                            <field name="soil_type"/>
+                            <field name="current_crop_id" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="area"/>
+                            <field name="last_soil_ph" readonly="1"/>
+                            <field name="last_soil_sample_date" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Boundary Map" name="map">
+                            <div class="mb-2">
+                                <button name="action_compute_area_from_boundary" type="object"
+                                        string="Recompute Area from Boundary" class="btn-secondary"/>
+                            </div>
+                            <field name="boundary_geojson" widget="agri_field_map"
+                                   options="{'lat_field': 'center_latitude', 'lng_field': 'center_longitude'}"/>
+                            <group>
+                                <field name="center_latitude"/>
+                                <field name="center_longitude"/>
+                            </group>
+                        </page>
+                        <page string="Crop Plans" name="crop_plans">
+                            <field name="crop_plan_ids">
+                                <list>
+                                    <field name="season_id"/>
+                                    <field name="crop_id"/>
+                                    <field name="state"/>
+                                    <field name="planned_area"/>
+                                    <field name="actual_cost"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Soil Samples" name="soil_samples">
+                            <field name="soil_sample_ids">
+                                <list editable="bottom">
+                                    <field name="date"/>
+                                    <field name="soil_type"/>
+                                    <field name="ph"/>
+                                    <field name="organic_matter"/>
+                                    <field name="nitrogen"/>
+                                    <field name="phosphorus"/>
+                                    <field name="potassium"/>
+                                    <field name="ec"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_agri_field_search" model="ir.ui.view">
+        <field name="name">agri.field.search</field>
+        <field name="model">agri.field</field>
+        <field name="arch" type="xml">
+            <search string="Search Fields">
+                <field name="name"/>
+                <field name="farm_id"/>
+                <field name="soil_type"/>
+                <group>
+                    <filter string="Farm" name="group_farm" context="{'group_by': 'farm_id'}"/>
+                    <filter string="Soil Type" name="group_soil_type" context="{'group_by': 'soil_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_agri_field" model="ir.actions.act_window">
+        <field name="name">Fields</field>
+        <field name="res_model">agri.field</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create your first field</p>
+            <p>Draw its boundary on the map to get the area automatically.</p>
+        </field>
+    </record>
+
+</odoo>

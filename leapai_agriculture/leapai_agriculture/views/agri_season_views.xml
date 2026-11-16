@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_agri_season_list" model="ir.ui.view">
+        <field name="name">agri.season.list</field>
+        <field name="model">agri.season</field>
+        <field name="arch" type="xml">
+            <list string="Seasons">
+                <field name="name"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="crop_plan_count"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_agri_season_form" model="ir.ui.view">
+        <field name="name">agri.season.form</field>
+        <field name="model">agri.season</field>
+        <field name="arch" type="xml">
+            <form string="Season">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(leapai_agriculture.action_agri_crop_plan)d" type="action"
+                                class="oe_stat_button" icon="fa-leaf"
+                                context="{'search_default_season_id': id, 'default_season_id': id}">
+                            <field name="crop_plan_count" widget="statinfo" string="Crop Plans"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Season Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="date_start"/>
+                        <field name="date_end"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                    <group string="Notes">
+                        <field name="notes" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_agri_season" model="ir.actions.act_window">
+        <field name="name">Seasons</field>
+        <field name="res_model">agri.season</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create your first season</p>
+        </field>
+    </record>
+
+</odoo>
